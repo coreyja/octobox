@@ -55,6 +55,8 @@ Rails.application.routes.draw do
     get '/terms', to: 'pages#terms'
   end
 
+  get '/settings/saved-searches', to: 'saved_searches#index'
+
   get '/settings', to: 'users#edit'
   resources :users, only: [:update, :destroy] do
     collection do
