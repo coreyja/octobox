@@ -34,6 +34,7 @@
           <% if @notifications.to_a.any? %>
             <div class="custom-control custom-checkbox select-all d-inline-block">
               <input id="select_all" type="checkbox" class='custom-control-input js-select_all' aria-label='Select All'>
+              <label class="custom-control-label" for="select_all"></label>
             </div>
             <%= select_all_button(@cur_selected, @total) %>
           <% end %>

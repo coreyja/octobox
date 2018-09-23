@@ -3,13 +3,14 @@
   <td class='notification-checkbox'>
     <div class="custom-control custom-checkbox">
       <%= check_box_tag(
-          '',
+          "notification_#{notification.id}",
           notification.id,
           false,
           title: (notification.archived ? 'Unarchive' : 'Archive'),
           class: (notification.archived ? 'custom-control-input unarchive' : 'custom-control-input archive')
         )
       %>
+      <label class="custom-control-label" for="<%= "notification_#{notification.id}" %>"></label>
     </div>
   </td>
   <td class='notification-star'>
