@@ -420,13 +420,12 @@ td.keys {
     .custom-control {
       padding-left: unset;
     }
-    input {
+    label {
       margin-left: 6px;
       margin-right: 0;
       position: relative;
-      top: -1px;
-      opacity: 1;
-      z-index: 1;
+      top: -16px;
+      left: 16px;
     }
   }
   .notification{
@@ -700,13 +699,12 @@ svg{
 }
 
 .select-all {
-  padding-left: 8px;
-  padding-right: 12px;
-  input {
+  padding-left: 10px;
+  width: 30px;
+  label {
     position: relative;
-    left: 2px;
-    opacity: 1;
-    z-index: 1;
+    top: -16px;
+    left: 16px;
   }
 }
 
@@ -772,4 +770,11 @@ svg{
 
 .blur-action {
   opacity: .5;
+}
+
+.custom-checkbox label{
+  &::before, &::after{
+    background-color: $body-bg;
+    color: rgba($body-color,0.1);
+  }
 }
