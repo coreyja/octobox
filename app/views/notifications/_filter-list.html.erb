@@ -3,8 +3,8 @@
     <span class="btn-group">
       <a href="#" class="btn btn-sm btn-outline-dark filter-label" role="button" aria-disabled="true">Filter:</a>
 
-      <% if params[:reason].present? %>
-        <% params[:reason].split(',').compact.each do |reason| %>
+      <% if @search.parsed_query[:reason].present? %>
+        <% @search.parsed_query[:reason].compact.each do |reason| %>
           <%= reason_filter_option reason do %>
             <%= reason.underscore.humanize %>
           <% end %>
@@ -12,51 +12,53 @@
       <% end %>
 
       <%= filter_option :unread do %>
-        <%= (params[:unread] === 'true'? 'Unread' : 'Read') %>
+        <%= (@search.parsed_query[:unread] === 'true'? 'Unread' : 'Read') %>
       <% end %>
 
       <%= filter_option :repo do %>
-        <%= params[:repo] %>
+        <%= @search.parsed_query[:repo] %>
       <% end %>
 
       <%= filter_option :type do %>
-        <%= params[:type].underscore.gsub('repository', '').humanize %>
+        <%= @search.parsed_query[:type].underscore.gsub('repository', '').humanize %>
       <% end %>
 
       <%= filter_option :owner do %>
-        <%= params[:owner] %>
+        <%= @search.parsed_query[:owner] %>
       <% end %>
 
       <%= filter_option :state do %>
-        <%= params[:state].humanize %>
+        <%= @search.parsed_query[:state].humanize %>
       <% end %>
 
       <%= filter_option :label do %>
-        Label: <%= emojify(params[:label]) %>
+        Label: <%= emojify(@search.parsed_query[:label]) %>
       <% end %>
 
-      <%= filter_option :q do %>
-        Search: <%= params[:q] %>
+      <% if @search.parsed_query.freetext.present? %>
+        <%= filter_option :q do %>
+          Search: <%= @search.parsed_query.freetext %>
+        <% end %>
       <% end %>
 
       <%= filter_option :bot do %>
-        <%= (params[:bot] === 'true'? 'Bot' : 'Human') %>
+        <%= (@search.parsed_query[:bot] === 'true'? 'Bot' : 'Human') %>
       <% end %>
 
       <%= filter_option :unlabelled do %>
-        <%= (params[:unlabelled] === 'true'? 'Unabelled' : 'Labelled') %>
+        <%= (@search.parsed_query[:unlabelled] === 'true'? 'Unabelled' : 'Labelled') %>
       <% end %>
 
       <%= filter_option :author do %>
-        Author: <%= params[:author] %>
+        Author: <%= @search.parsed_query[:author] %>
       <% end %>
 
       <%= filter_option :assigned do %>
-        Assigned: <%= params[:assigned] %>
+        Assigned: <%= @search.parsed_query[:assigned] %>
       <% end %>
 
       <%= filter_option :is_private do %>
-        <%= (params[:is_private] === 'true'? 'Private' : 'Public') %>
+        <%= (@search.parsed_query[:is_private] === 'true'? 'Private' : 'Public') %>
       <% end %>
     </span>
   </span>

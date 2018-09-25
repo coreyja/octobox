@@ -27,22 +27,22 @@ module NotificationsHelper
 
   def filters
     {
-      reason:     params[:reason],
-      unread:     params[:unread],
-      repo:       params[:repo],
-      type:       params[:type],
-      archive:    params[:archive],
-      starred:    params[:starred],
-      owner:      params[:owner],
-      per_page:   params[:per_page],
-      q:          params[:q],
-      state:      params[:state],
-      label:      params[:label],
-      author:     params[:author],
-      bot:        params[:bot],
-      unlabelled: params[:unlabelled],
-      assigned:   params[:assigned],
-      is_private: params[:is_private]
+      reason:     @search.parsed_query[:reason],
+      unread:     @search.parsed_query[:unread],
+      repo:       @search.parsed_query[:repo],
+      type:       @search.parsed_query[:type],
+      archive:    @search.parsed_query[:archive],
+      starred:    @search.parsed_query[:starred],
+      owner:      @search.parsed_query[:owner],
+      per_page:   @search.parsed_query[:per_page],
+      q:          @search.parsed_query[:q],
+      state:      @search.parsed_query[:state],
+      label:      @search.parsed_query[:label],
+      author:     @search.parsed_query[:author],
+      bot:        @search.parsed_query[:bot],
+      unlabelled: @search.parsed_query[:unlabelled],
+      assigned:   @search.parsed_query[:assigned],
+      is_private: @search.parsed_query[:is_private]
     }
   end
 
