@@ -1,7 +1,7 @@
 class Comment < ApplicationRecord
   belongs_to :subject
 
-  after_create :push_to_channels
+  after_save :push_if_changed
 
   BOT_AUTHOR_REGEX = /\A(.*)\[bot\]\z/.freeze
 
@@ -25,14 +25,19 @@ class Comment < ApplicationRecord
     notification.last_read_at && DateTime.parse(notification.last_read_at) < created_at
   end
 
+  def push_if_changed
+    push_to_channels if (saved_changes.keys & pushable_fields).any?
+  end
+
   def push_to_channels
     comment_html = ApplicationController.render(partial: 'notifications/comment', locals: {subject: self.subject.id, comment: self, comments:1})
-    ActionCable.server.broadcast "comments:#{subject.id}", {comment_html: comment_html, subject_id: self.subject.id}
+    ActionCable.server.broadcast "comments:#{subject.id}", {comment_id: self.id, comment_html: comment_html, subject_id: self.subject.id}
   end
 
   private
 
   def pushable_fields
-    ['body']
+    ['body', 'github_id']
   end
+
 end

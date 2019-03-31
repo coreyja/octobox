@@ -117,15 +117,18 @@ var Octobox = (function() {
     window.current_id = undefined;
 
     $(document).keydown(function(e) {
-      // disable shortcuts for the seach box
-      if ($("#help-box").length && e.target.id !== "search-box" && !e.ctrlKey && !e.metaKey) {
+      // disable shortcuts for the seach and comment
+      if ($("#help-box").length && !["search-box","comment_body"].includes(e.target.id)  && !e.ctrlKey && !e.metaKey) {
         var shortcutFunction = (!e.shiftKey ? shortcuts : shiftShortcuts)[e.which] ;
         if (shortcutFunction) { shortcutFunction(e) }
         return;
       }
 
-      // escape search-box
-      if(e.target.id === "search-box" && e.which === 27) shortcuts[27](e);
+      // escape search and comment
+      if(["search-box", "comment_body"].includes(e.target.id) && e.which === 27) shortcuts[27](e);
+
+      // post comment form on CMD-enter
+      if(["comment_body"].includes(e.target.id) && (e.metaKey || e.ctrlKey) && e.which == 13) $('#reply').submit();
     });
   };
 
@@ -204,12 +207,12 @@ var Octobox = (function() {
 
   var archiveThread = function(){
     var id = $('#notification-thread').data('id');
-    archive(id, true);
+    archive([id], true);
   }
 
   var unarchiveThread = function(){
     var id = $('#notification-thread').data('id');
-    archive(id, false);
+    archive([id], false);
   }
 
   var archive = function(ids, value){
@@ -361,6 +364,7 @@ var Octobox = (function() {
   };
 
   var closeThread = function() {
+    history.pushState({thread: $(this).attr('href')}, 'Octobox', $(this).attr('href'))
     if(!$("#thread").hasClass("d-none")){
       $("#thread").toggleClass("d-none");
       $(".flex-main").toggleClass("show-thread");
@@ -454,6 +458,7 @@ var Octobox = (function() {
       }
     });
     openThread();
+    subscribeToComments();
     return false;
   }
 

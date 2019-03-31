@@ -85,13 +85,13 @@ Protip: To generate a key, you can use `bin/rails secret | cut -c1-32`
 First things first, you'll need to fork and clone Octobox repository to
 your local machine.
 
-Secondly, you'll need to install Ruby 2.6.1. I recommend using the excellent [rbenv](https://github.com/rbenv/rbenv),
+Secondly, you'll need to install Ruby 2.6.2. I recommend using the excellent [rbenv](https://github.com/rbenv/rbenv),
 and [ruby-build](https://github.com/rbenv/ruby-build):
 
 ```bash
 brew install rbenv ruby-build
-rbenv install 2.6.1
-rbenv global 2.6.1
+rbenv install 2.6.2
+rbenv global 2.6.2
 ```
 
 Next, you'll need to make sure that you have PostgreSQL installed. This can be
@@ -417,7 +417,7 @@ Then create a new GitHub App, <https://github.com/settings/apps/new>, with the f
 - Webhook secret: generate a password and paste it in here and save for later
 - Permissions:
   - Repository metadata: Read-only
-  - Issues: Read-only
+  - Issues: write
   - Pull Requests: Read-only
   - Commit statuses: Read-only
 - Subscribe to events: check all available options
