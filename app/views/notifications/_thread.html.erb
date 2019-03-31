@@ -19,13 +19,11 @@
     <% else %>
       <%= link_to octicon('chevron-right'), '#', class: "btn btn-sm next btn-outline-secondary" %>
     <% end %>
-    <button class='btn btn-sm closethread btn-outline-dark d-xxxl-none' data-toggle='tooltip' title='Close discussion'>
-      <%= octicon('x') %>
-    </button>
+    <%= link_to octicon('x'), root_path(filtered_params), class: 'btn btn-sm closethread btn-outline-dark d-xxxl-none', data:{toggle: 'tooltip'}, title: 'Close discussion' %>
   </div>
 </div>
 
-<div id='notification-thread' class="p-3 mb-5" data-id='<%= @notification.subject.id %>'>
+<div id='notification-thread' class="p-3 mb-5" data-id='<%= @notification.id %>' data-subject-id='<%= @notification.subject.id %>'>
 
   <div id='thread-subject'>
     <%= render 'thread_subject', notification: @notification %>
@@ -74,11 +72,8 @@
       
     </div>
 
-    <% if @notification.subject.commentable? %>
-      <%= link_to @notification.subject.html_url+'#new_comment_field', target: :blank, class: 'btn btn-success mt-2 float-right' do %>
-        Reply on GitHub
-        <%= octicon('link-external', height: 18, class: 'ml-1') %>
-      <% end %>
+    <% if current_user.can_comment?(@notification.subject)%>
+      <%= render partial: 'reply', locals: {notification: @notification} %>
     <% end %>
   <% end %>
 </div>

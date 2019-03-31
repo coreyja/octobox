@@ -30,6 +30,8 @@ class User < ApplicationRecord
   scope :not_recently_synced, -> { where('last_synced_at < ?', 5.minutes.ago) }
   scope :with_access_token, -> { where.not(encrypted_access_token: nil) }
 
+  after_create :create_default_pinned_searches
+
   def admin?
     Octobox.config.github_admin_ids.include?(github_id.to_s)
   end
@@ -104,6 +106,11 @@ class User < ApplicationRecord
     @access_token_client ||= Octokit::Client.new(access_token: access_token, auto_paginate: true) if access_token.present?
   end
 
+  def comment_client(comment)
+    return app_installation_client if app_token.present? && comment.subject.repository.commentable?
+    return github_client
+  end
+
   def app_installation_client
     Octokit::Client.new(access_token: app_token, auto_paginate: true) if app_token.present?
   end
@@ -142,5 +149,23 @@ class User < ApplicationRecord
     app_installation_ids = app_installations.map(&:id)
     removed_permissions = app_installation_permissions.reject{|ep| app_installation_ids.include?(ep.app_installation_id) }
     removed_permissions.each(&:destroy)
+  end
+
+  def has_app_installed?(subject)
+    subject.repository.app_installation_id && app_token
+  end
+
+  def can_comment?(subject)
+    return false unless subject.commentable?
+    return true if personal_access_token_enabled?
+    return true if Octobox.fetch_subject?
+    return true if github_app_authorized? && subject.repository.commentable?
+    return false
+  end
+
+  def create_default_pinned_searches 
+    pinned_searches.create(query: 'state:closed,merged archived:false', name: 'Archivable')
+    pinned_searches.create(query: 'type:pull_request state:open status:success archived:false', name: 'Mergeable')
+    pinned_searches.create(query: "type:pull_request author:#{github_login} inbox:true", name: 'My PRs')
   end
 end
