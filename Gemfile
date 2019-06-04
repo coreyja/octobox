@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
-ruby '2.6.2'
+ruby '2.6.3'
 
 gem 'rails', '~> 5.2'
 gem 'bootstrap'
 gem 'attr_encrypted'
 gem 'jquery-rails'
-gem 'kaminari'
+gem 'pagy'
 gem 'local_time'
 gem 'octicons_helper'
 gem 'octokit'
@@ -18,12 +18,12 @@ gem 'faraday_middleware'
 gem 'uglifier'
 gem 'pg_search'
 gem 'jbuilder'
-gem 'rake'
+gem 'rake', require: false
 gem 'git'
 gem 'rgb'
 gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
-gem 'sidekiq-scheduler'
+gem 'sidekiq-scheduler', require: false
 gem 'rack-canonical-host'
 gem 'sidekiq-status'
 gem 'gemoji', require: false
@@ -31,8 +31,7 @@ gem 'bootsnap', require: false
 gem 'bugsnag'
 gem 'jwt'
 gem 'oj'
-gem 'yard'
-gem 'simple_form'
+gem 'yard', require: false
 gem 'commonmarker'
 
 # Supported databases
@@ -50,6 +49,7 @@ group :development, :test do
   gem 'sql_queries_count'
   gem 'active_record_query_trace'
   gem 'rubocop', require: false
+  gem 'rubocop-performance'
 end
 
 group :test do
@@ -60,8 +60,8 @@ group :test do
   gem 'minitest'
   gem 'selenium-webdriver'
   gem 'capybara'
-  gem 'percy-capybara'
   gem 'action-cable-testing'
+  gem 'timecop'
 end
 
 group :development do
@@ -76,7 +76,7 @@ group :development do
 end
 
 group :production do
-  gem 'skylight', '4.0.0.beta2'
+  gem 'skylight', '4.0.2'
   gem 'lograge'
   gem 'puma_worker_killer'
   gem 'hirefire-resource'
