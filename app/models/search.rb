@@ -36,6 +36,7 @@ class Search
     res = res.bot_author(bot_author) unless bot_author.nil?
     res = res.unlabelled unless unlabelled.nil?
     res = res.is_private(is_private) unless is_private.nil?
+    res = res.draft(is_draft) unless is_draft.nil?
     res = lock_conditionally(res)
     res = mute_conditionally(res)
     res = apply_sort(res)
@@ -68,14 +69,19 @@ class Search
     @parsed_query[:archived] = ['true'] if params[:archive].present?
     @parsed_query[:inbox] = ['true'] if params[:archive].blank? && params[:starred].blank? && params[:q].blank?
 
-    [:reason, :type, :unread, :state, :is_private].each do |filter|
+    [:reason, :type, :unread, :state, :is_private, :draft].each do |filter|
       next if params[filter].blank?
       @parsed_query[filter] = Array(params[filter]).map(&:underscore)
     end
 
-    [:repo, :owner, :author, :label].each do |filter|
+    [:repo, :owner, :author].each do |filter|
       next if params[filter].blank?
       @parsed_query[filter] = Array(params[filter])
+    end
+
+    if params[:label].present?
+      label = params[:label].match?(/\:|\s/) ? "\"#{params[:label]}\"" : params[:label]
+      @parsed_query[:label] = Array(label)
     end
 
     @parsed_query[:assignee] = Array(params[:assigned]) if params[:assigned].present?
@@ -235,6 +241,10 @@ class Search
 
   def is_muted
     boolean_prefix(:muted)
+  end
+
+  def is_draft
+    boolean_prefix(:draft)
   end
 
   private

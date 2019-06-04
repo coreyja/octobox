@@ -30,7 +30,7 @@
 
 <% if current_user.pinned_searches.present? || any_active_filters? %>
   <ul class="nav nav-pills flex-column nav-filters">
-    <% current_user.pinned_searches.each do |pinned_search| %>
+    <% current_user.pinned_searches.sort_by(&:name).each do |pinned_search| %>
       <li role="presentation" class="nav-item pinned_search">
         <%= link_to root_path(q: pinned_search.query), { :class=>"nav-link #{'active' if search_query_matches?(@search.to_query, pinned_search.query)}", title: pinned_search.query } do %>
           <%= octicon 'search', height: 16, class: 'sidebar-icon' %>
@@ -71,6 +71,12 @@
       <%= filter_link :state, state, count do %>
         <%= octicon 'primitive-square', height: 24, class: "sidebar-icon text-#{state_label(state)}" %>
         <%= state.underscore.humanize %>
+      <% end %>
+    <% end %>
+    <% if @draft > 0 %>
+      <%= filter_link :draft, true, @draft do %>
+        <%= octicon 'primitive-square', height: 24, class: "sidebar-icon text-draft" %>
+        Draft
       <% end %>
     <% end %>
   </ul>
